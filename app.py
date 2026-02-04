@@ -58,11 +58,19 @@ def add_author():
 
         if not name:
             error = "Name ist erforderlich."
-            return render_template("add_author.html", success=success, error=error)
+            return render_template(
+                "add_author.html",
+                success=success,
+                error=error
+            )
 
         if Author.query.filter_by(name=name).first():
             error = "Autor existiert bereits."
-            return render_template("add_author.html", success=success, error=error)
+            return render_template(
+                "add_author.html",
+                success=success,
+                error=error
+            )
 
         author = Author(name=name, birth_date=birth_date, date_of_death=date_of_death)
         db.session.add(author)
@@ -86,15 +94,30 @@ def add_book():
 
         if not authors:
             error = "Bitte zuerst mindestens einen Autor hinzufügen."
-            return render_template("add_book.html", authors=authors, success=success, error=error)
+            return render_template(
+                "add_book.html",
+                authors=authors,
+                success=success,
+                error=error
+            )
 
         if not isbn or not title or not author_id_raw:
             error = "ISBN, Titel und Autor sind erforderlich."
-            return render_template("add_book.html", authors=authors, success=success, error=error)
+            return render_template(
+                "add_book.html",
+                authors=authors,
+                success=success,
+                error=error
+            )
 
         if Book.query.filter_by(isbn=isbn).first():
             error = "Diese ISBN existiert bereits."
-            return render_template("add_book.html", authors=authors, success=success, error=error)
+            return render_template(
+                "add_book.html",
+                authors=authors,
+                success=success,
+                error=error
+            )
 
         publication_year = int(publication_year_raw) if publication_year_raw else None
         author_id = int(author_id_raw)
@@ -109,7 +132,12 @@ def add_book():
         db.session.commit()
         success = "Buch erfolgreich hinzugefügt."
 
-    return render_template("add_book.html", authors=authors, success=success, error=error)
+    return render_template(
+        "add_book.html",
+        authors=authors,
+        success=success,
+        error=error
+    )
 
 
 @app.route("/book/<int:book_id>/delete", methods=["POST"])
