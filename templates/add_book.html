@@ -1,15 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  </head>
-  <body>
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Buch hinzufügen</title>
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('home') }}">Home</a> |
+    <a href="{{ url_for('add_author') }}">Autor hinzufügen</a> |
+    <a href="{{ url_for('add_book') }}">Buch hinzufügen</a>
+  </nav>
 
-  <form action="/add_author" method="POST">
-  <!-- Add the form here -->
+  <h1>Buch hinzufügen</h1>
+
+  {% if success %}
+  <p><strong>{{ success }}</strong></p>
+{% endif %}
+{% if error %}
+  <p><strong>{{ error }}</strong></p>
+{% endif %}
+
+
+  <form method="POST" action="{{ url_for('add_book') }}">
+    <div>
+      <label for="isbn">ISBN</label><br>
+      <input id="isbn" name="isbn" type="text" required>
+    </div>
+
+    <br>
+
+    <div>
+      <label for="title">Titel</label><br>
+      <input id="title" name="title" type="text" required>
+    </div>
+
+    <br>
+
+    <div>
+      <label for="publication_year">Erscheinungsjahr</label><br>
+      <input id="publication_year" name="publication_year" type="number" min="0">
+    </div>
+
+    <br>
+
+    <div>
+      <label for="author_id">Autor</label><br>
+      <select id="author_id" name="author_id" required>
+        <option value="" disabled selected>Bitte wählen</option>
+        {% for author in authors %}
+          <option value="{{ author.id }}">{{ author.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <br>
+
+    <button type="submit">Speichern</button>
   </form>
-
-  </body>
+</body>
 </html>

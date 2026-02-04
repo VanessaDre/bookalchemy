@@ -1,22 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  </head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <title>Add Author</title>
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('home') }}">Home</a> |
+    <a href="{{ url_for('add_author') }}">Author hinzufügen</a> |
+    <a href="{{ url_for('add_book') }}">Book hinzufügen</a>
+  </nav>
 
-  <form action="/add_author" method="POST">
-  <label for="name">Author Name:</label> 
-  <input type="text" id="name" name="name" required><br><br>
-  
-  <label for="birthdate">Birthdate:</label> 
-  <input type="date" id="birthdate" name="birthdate" required><br><br> 
-  <label for="date_of_death">Date of Death:</label> 
-  <input type="date" id="date_of_death" name="date_of_death"><br><br>
-  <input type="submit" value="Add Author"> 
+  <h1>Author hinzufügen</h1>
+
+  {% if success %}
+    <p><strong>{{ success }}</strong></p>
+  {% endif %}
+  {% if error %}
+    <p><strong>{{ error }}</strong></p>
+  {% endif %}
+
+  <form method="POST" action="{{ url_for('add_author') }}">
+    <div>
+      <label for="name">Name</label><br>
+      <input id="name" name="name" type="text" required>
+    </div>
+
+    <br>
+
+    <div>
+      <label for="birth_date">Birth date</label><br>
+      <input id="birth_date" name="birth_date" type="date">
+    </div>
+
+    <br>
+
+    <div>
+      <label for="date_of_death">Date of death</label><br>
+      <input id="date_of_death" name="date_of_death" type="date">
+    </div>
+
+    <br>
+
+    <button type="submit">Save</button>
   </form>
-
-  </body>
+</body>
 </html>
