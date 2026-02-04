@@ -1,9 +1,10 @@
+<!-- templates/home.html (komplett, inkl. Suche + Sortierung) -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Library</title>
   </head>
   <body>
@@ -16,13 +17,33 @@
 
     <h1>My Library</h1>
 
+    <!-- Sortierung -->
     <form method="GET" action="{{ url_for('home') }}">
       <label for="sort">Sort by:</label>
       <select id="sort" name="sort" onchange="this.form.submit()">
         <option value="title" {% if sort == "title" %}selected{% endif %}>Title</option>
         <option value="author" {% if sort == "author" %}selected{% endif %}>Author</option>
       </select>
+      {% if q %}
+        <input type="hidden" name="q" value="{{ q }}">
+      {% endif %}
     </form>
+
+    <!-- Suche -->
+    <form method="GET" action="{{ url_for('home') }}" style="margin-top: 10px;">
+      <label for="q">Search:</label>
+      <input id="q" name="q" type="text" value="{{ q or '' }}" placeholder="Title or author">
+      <input type="hidden" name="sort" value="{{ sort }}">
+      <button type="submit">Search</button>
+
+      {% if q %}
+        <a href="{{ url_for('home', sort=sort) }}">Clear</a>
+      {% endif %}
+    </form>
+
+    {% if message %}
+      <p><strong>{{ message }}</strong></p>
+    {% endif %}
 
     <hr>
 

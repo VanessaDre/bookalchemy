@@ -23,17 +23,24 @@ def _parse_date(value: str | None) -> date | None:
 @app.route("/")
 def home():
     sort = request.args.get("sort", "title")
+    q = request.args.get("q", "").strip()
+
+    query = Book.query.join(Author)
+
+    if q:
+        like = f"%{q}%"
+        query = query.filter((Book.title.ilike(like)) | (Author.name.ilike(like)))
 
     if sort == "author":
-        books = (
-            Book.query.join(Author)
-            .order_by(Author.name.asc(), Book.title.asc())
-            .all()
-        )
+        books = query.order_by(Author.name.asc(), Book.title.asc()).all()
     else:
-        books = Book.query.order_by(Book.title.asc()).all()
+        books = query.order_by(Book.title.asc()).all()
 
-    return render_template("home.html", books=books, sort=sort)
+    message = None
+    if q and not books:
+        message = f'No books found for "{q}".'
+
+    return render_template("home.html", books=books, sort=sort, q=q, message=message)
 
 
 @app.route("/add_author", methods=["GET", "POST"])
