@@ -1,4 +1,3 @@
-<!-- templates/home.html (komplett, inkl. Suche + Sortierung) -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,24 +16,17 @@
 
     <h1>My Library</h1>
 
-    <!-- Sortierung -->
     <form method="GET" action="{{ url_for('home') }}">
       <label for="sort">Sort by:</label>
-      <select id="sort" name="sort" onchange="this.form.submit()">
+      <select id="sort" name="sort">
         <option value="title" {% if sort == "title" %}selected{% endif %}>Title</option>
         <option value="author" {% if sort == "author" %}selected{% endif %}>Author</option>
       </select>
-      {% if q %}
-        <input type="hidden" name="q" value="{{ q }}">
-      {% endif %}
-    </form>
 
-    <!-- Suche -->
-    <form method="GET" action="{{ url_for('home') }}" style="margin-top: 10px;">
-      <label for="q">Search:</label>
+      <label for="q" style="margin-left:10px;">Search:</label>
       <input id="q" name="q" type="text" value="{{ q or '' }}" placeholder="Title or author">
-      <input type="hidden" name="sort" value="{{ sort }}">
-      <button type="submit">Search</button>
+
+      <button type="submit">Apply</button>
 
       {% if q %}
         <a href="{{ url_for('home', sort=sort) }}">Clear</a>
@@ -58,9 +50,18 @@
           <h3 style="display:inline;">{{ book.title }}</h3>
           — {{ book.author.name }}
           {% if book.publication_year %} ({{ book.publication_year }}){% endif %}
+
+          <form
+            method="POST"
+            action="{{ url_for('delete_book', book_id=book.id) }}"
+            style="display:inline; margin-left:10px;"
+          >
+            <button type="submit">Delete book</button>
+          </form>
         </span>
       </div>
     {% endfor %}
 
   </body>
 </html>
+

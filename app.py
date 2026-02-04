@@ -1,7 +1,7 @@
 import os
 from datetime import date
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from data_models import db, Author, Book
 
 app = Flask(__name__)
@@ -24,6 +24,7 @@ def _parse_date(value: str | None) -> date | None:
 def home():
     sort = request.args.get("sort", "title")
     q = request.args.get("q", "").strip()
+    deleted = request.args.get("deleted")
 
     query = Book.query.join(Author)
 
@@ -37,7 +38,9 @@ def home():
         books = query.order_by(Book.title.asc()).all()
 
     message = None
-    if q and not books:
+    if deleted == "1":
+        message = "Book deleted successfully."
+    elif q and not books:
         message = f'No books found for "{q}".'
 
     return render_template("home.html", books=books, sort=sort, q=q, message=message)
@@ -107,6 +110,17 @@ def add_book():
         success = "Buch erfolgreich hinzugefügt."
 
     return render_template("add_book.html", authors=authors, success=success, error=error)
+
+
+@app.route("/book/<int:book_id>/delete", methods=["POST"])
+def delete_book(book_id: int):
+    book = Book.query.get_or_404(book_id)
+    author = book.author  # merken, bevor wir löschen
+
+    db.session.delete(book)
+    db.session.commit()
+
+    return redirect(url_for("home", deleted="1"))
 
 
 if __name__ == "__main__":
